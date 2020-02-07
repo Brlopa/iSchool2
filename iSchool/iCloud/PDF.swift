@@ -50,7 +50,7 @@ class PDF: Identifiable {
     
     init?(record: CKRecord, database: CKDatabase) {
         guard
-            let pdf = record["PDF"] as? CKAsset,
+            let pdf = record["pdf"] as? CKAsset,
             let name = record["Name"] as? String
             else { return nil }
         id = record.recordID
@@ -74,6 +74,8 @@ class PDF: Identifiable {
         //       }
     }
     
+    
+    //  Wird nicht gebaraucht!
     
     func loadPDF(completion: @escaping (_ pdf: PDFKitView?) -> ()) {
       DispatchQueue.global(qos: .utility).async {

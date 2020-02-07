@@ -13,9 +13,13 @@ struct PDFViewShare: View {
     @State var ShowShareSheet = false
     let document = PDFDocument(url: Bundle.main.url(forResource: "Geografie-Probe-2", withExtension: "pdf")!)
     
+    var pdfs = Model.currentModel.pdfs
+    
     var body: some View {
         NavigationView{
-            PDFKitView(url: Bundle.main.url(forResource: "Geografie-Probe-2", withExtension: "pdf"))
+            
+            PDFKitView(url: pdfs)
+                
             .navigationBarItems(trailing:
                 Button("Share") {
                     self.ShowShareSheet = true

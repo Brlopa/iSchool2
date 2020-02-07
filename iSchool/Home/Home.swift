@@ -17,14 +17,13 @@ struct MockCourse {
 
 struct Home: View {
     
-    
-//var LessonsName = Model.currentModel.courses
+var LessonsName = Model.currentModel.courses
 //    ändern um auf iCloud Daten zuzugraifen
-    var LessonsName = [
-        MockCourse(name: "Biologie", tasks: ["test", "test2", "test3"]),
-        MockCourse(name: "English", tasks: ["test", "test2", "test3"]),
-        MockCourse(name: "French", tasks: ["test", "test2", "test3"])
-    ]
+//    var LessonsName = [
+//        MockCourse(name: "Biologie", tasks: ["test", "test2", "test3"]),
+//        MockCourse(name: "English", tasks: ["test", "test2", "test3"]),
+//        MockCourse(name: "French", tasks: ["test", "test2", "test3"])
+//    ]
     
     let BlurCount = CGFloat(10)
     
