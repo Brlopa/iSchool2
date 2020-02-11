@@ -16,22 +16,22 @@ struct TabBar: View {
                 Text("Start")
                 Text("Test")
             }
-           // Dictionary().tabItem{
-           //     Image(systemName: "doc.text.magnifyingglass")
-            //    Text("Dictionary")
-            
+            PracticeNew().tabItem{
+                Image(systemName: "doc.richtext")
+                Text("Pdf")
+            }
+            Dictonary().tabItem{
+                Image(systemName: "doc.text.magnifyingglass")
+                Text("Dictionary")
+            }
             Settings().tabItem{
                 Image(systemName: "gear")
                 Text("Settings")
             }
-            
-            PracticeNew().tabItem{
-                Image(systemName: "house.fill")
-                Text("PDF")
-                }
-            }
         }
+    }
 }
+
 
 struct TabBar_Previews: PreviewProvider {
     static var previews: some View {

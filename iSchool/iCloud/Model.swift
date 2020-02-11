@@ -31,66 +31,87 @@ import CloudKit
 import Combine
 
 class Model {
-  // MARK: - iCloud Info
-  let container: CKContainer
-  let publicDB: CKDatabase
-  let privateDB: CKDatabase
-  
-  // MARK: - Properties
+    // MARK: - iCloud Info
+    let container: CKContainer
+    let publicDB: CKDatabase
+    let privateDB: CKDatabase
+    
+    // MARK: - Properties
     private(set) var courses: [Course] = []
     private(set) var pdfs: [PDF] = []
+    private(set) var dictionarys: [DictionaryData] = []
     static var currentModel = Model()
     
     init() {
-    container = CKContainer.default()
-    publicDB = container.publicCloudDatabase
-    privateDB = container.privateCloudDatabase
-  }
-  
-  @objc func refresh(_ completion: @escaping (Error?) -> Void) {
-    let predicate = NSPredicate(value: true)
-    let query = CKQuery(recordType: "Course", predicate: predicate)
-    course(forQuery: query) { (_) in
+        container = CKContainer.default()
+        publicDB = container.publicCloudDatabase
+        privateDB = container.privateCloudDatabase
+    }
+    
+    @objc func refresh(_ completion: @escaping (Error?) -> Void) {
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Course", predicate: predicate)
+        course(forQuery: query) { (_) in
         let query2 = CKQuery(recordType: "PDF", predicate: predicate)
-        self.pdf(forQuery: query2, completion)
+            self.pdf(forQuery: query2, completion)
+        let query3 = CKQuery(recordType: "Dictionary", predicate: predicate)
+        self.dictionary(forQuery: query3, completion)
+        }
     }
-  }
-
-  
-  private func course(forQuery query: CKQuery, _ completion: @escaping (Error?) -> Void) {
-    publicDB.perform(query, inZoneWith: CKRecordZone.default().zoneID) { [weak self] results, error in
-      guard let self = self else { return }
-      if let error = error {
-        DispatchQueue.main.async {
-          completion(error)
+    
+    
+    private func course(forQuery query: CKQuery, _ completion: @escaping (Error?) -> Void) {
+        publicDB.perform(query, inZoneWith: CKRecordZone.default().zoneID) { [weak self] results, error in
+            guard let self = self else { return }
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(error)
+                }
+                return
+            }
+            guard let results = results else { return }
+            self.courses = results.compactMap {
+                Course(record: $0, database: self.publicDB)
+            }
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }
-        return
-      }
-      guard let results = results else { return }
-      self.courses = results.compactMap {
-        Course(record: $0, database: self.publicDB)
-      }
-      DispatchQueue.main.async {
-        completion(nil)
-      }
     }
-  }
-    private func pdf(forQuery query: CKQuery, _ completion: @escaping (Error?) -> Void) {
-      publicDB.perform(query, inZoneWith: CKRecordZone.default().zoneID) { [weak self] results, error in
-        guard let self = self else { return }
-        if let error = error {
-          DispatchQueue.main.async {
-            completion(error)
-          }
-          return
+    func pdf(forQuery query: CKQuery, _ completion: @escaping (Error?) -> Void) {
+        publicDB.perform(query, inZoneWith: CKRecordZone.default().zoneID) { [weak self] results, error in
+            guard let self = self else { return }
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(error)
+                }
+                return
+            }
+            guard let results = results else { return }
+            self.pdfs = results.compactMap {
+                PDF(record: $0, database: self.publicDB)
+            }
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }
-        guard let results = results else { return }
-        self.pdfs = results.compactMap {
-          PDF(record: $0, database: self.publicDB)
+    }
+    func dictionary(forQuery query: CKQuery, _ completion: @escaping (Error?) -> Void) {
+        publicDB.perform(query, inZoneWith: CKRecordZone.default().zoneID) { [weak self] results, error in
+            guard let self = self else { return }
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(error)
+                }
+                return
+            }
+            guard let results = results else { return }
+            self.dictionarys = results.compactMap {
+                DictionaryData(record: $0, database: self.publicDB)
+            }
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }
-        DispatchQueue.main.async {
-          completion(nil)
-        }
-      }
     }
 }

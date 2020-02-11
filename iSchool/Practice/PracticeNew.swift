@@ -11,8 +11,9 @@ import PDFKit
 
 struct PracticeNew: View {
     @State var ShowShareSheet = false
-    
     var pdfs = Model.currentModel.pdfs
+    
+    var pdfData = Model.currentModel.pdfs
     
 //    let document = PDFDocument(url: Bundle.main.url(forResource: "Geografie-Probe-2", withExtension: "pdf")!)
     
@@ -53,5 +54,5 @@ struct PDFData : Identifiable {
     }
 }
 
-let PDFDataTest = [PDFData(name: "Geografie Probe 2"),PDFData( name: "Test")
+let PDFDataArray = [PDFData(name: "Geografie Probe 2"),PDFData( name: "Test")
 ]

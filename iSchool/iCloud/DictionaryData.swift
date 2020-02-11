@@ -32,7 +32,7 @@ import CloudKit
 import CoreLocation
 import PDFKit
 
-class PDF: Identifiable {
+class DictionaryData: Identifiable {
     enum ChangingTable: Int {
         case none
         case womens
@@ -40,22 +40,31 @@ class PDF: Identifiable {
         case both
     }
     
-    static let recordType = "PDF"
+    static let recordType = "Dictionary"
     internal let id: CKRecord.ID
     let name: String
-    let pdf: CKAsset
+//    let image: CKAsset
+    let dictionaryTop : [String]
+    let dictionaryTopic: String
+    let dictionaryTopicItem: [String]
     let database: CKDatabase
     
     // private(set) var notes: [Note]? = nil
     
     init?(record: CKRecord, database: CKDatabase) {
         guard
-            let pdf = record["pdf"] as? CKAsset,
-            let name = record["Name"] as? String
+//            let image = record["image"] as? CKAsset,
+            let name = record["Name"] as? String,
+            let dictionaryTop = record["DictionaryTop"] as? [String],
+            let dictionaryTopic = record["DitctionaryTopic"] as? String,
+            let dictionaryTopicItem = record["DictionaryTopicItem"] as? [String]
             else { return nil }
         id = record.recordID
+//        self.image = image
         self.name = name
-        self.pdf = pdf
+        self.dictionaryTopic = dictionaryTopic
+        self.dictionaryTop = dictionaryTop
+        self.dictionaryTopicItem = dictionaryTopicItem
         
         //self.location = location
         //coverPhoto = record["coverPhoto"] as? CKAsset
@@ -77,31 +86,55 @@ class PDF: Identifiable {
     
     //  Wird nicht gebraucht!
     
-    func loadPDF(completion: @escaping (_ pdf: PDFKitView?) -> ()) {
-      DispatchQueue.global(qos: .utility).async {
-        var pdfView: PDFKitView?
-        defer {
-          DispatchQueue.main.async {
-            completion(pdfView)
-          }
-        }
-        guard
-            let fileURL = self.pdf.fileURL
-          else {
-            return
-        }
-        pdfView = PDFKitView(url: fileURL)
-      }
-    }
+//    func loadPDF(completion: @escaping (_ pdf: PDFKitView?) -> ()) {
+//      DispatchQueue.global(qos: .utility).async {
+//        var pdfView: PDFKitView?
+//        defer {
+//          DispatchQueue.main.async {
+//            completion(pdfView)
+//          }
+//        }
+//        guard
+//            let fileURL = self.image.fileURL
+//          else {
+//            return
+//        }
+//        pdfView = PDFKitView(url: fileURL)
+//      }
+//    }
+    
+//    func loadCoverPhoto(completion: @escaping (_ photo: UIImage?) -> ()) {
+//      DispatchQueue.global(qos: .utility).async {
+//        var image: UIImage?
+//        defer {
+//          DispatchQueue.main.async {
+//            completion(image)
+//          }
+//        }
+//        guard
+//          let coverPhoto = self.image,
+//          let fileURL = coverPhoto.fileURL
+//          else {
+//            return
+//        }
+//        let imageData: Data
+//        do {
+//          imageData = try Data(contentsOf: fileURL)
+//        } catch {
+//          return
+//        }
+//        image = UIImage(data: imageData)
+//      }
+//    }
+//}
 }
 
 
 
 
 
-
-extension PDF: Hashable {
-    static func == (lhs: PDF, rhs: PDF) -> Bool {
+extension DictionaryData: Hashable {
+    static func == (lhs: DictionaryData, rhs: DictionaryData) -> Bool {
         return lhs.id == rhs.id
     }
     
